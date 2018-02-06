@@ -4,9 +4,6 @@ import pandas as pd
 import sys
 import argparse
 
-
-
-
 parser = argparse.ArgumentParser(prog='PROG', usage='%(prog)s [options]')
 
 parser.add_argument('--map', help='the map')
@@ -20,80 +17,61 @@ if args.map is None or args.input is None:
   sys.exit(-1)
 print args.map
 
-
+# Load Map
 a = np.loadtxt(args.map)
+matrix= np.matrix(a)
+print "Map matrix size: %s" % str(matrix.shape)
 
-#print a
-print "original"
-matrix = np.matrix(a)
-
-#print matrix
-
-print matrix[0,0]
-#print np.squeeze(np.asarray(matrix))
-
-print len (np.asarray(matrix).reshape(-1))
-print matrix[0,-1]
-print matrix[-1,0]
-
-print matrix.shape
-
-print "done"
-#print "MapSimulation min: %s, max: %s" % (min(d['{bodyFMU}.body.robot_y']),max(d['{bodyFMU}.body.robot_y']))
-#scalars (left, right, bottom, top), optional, default: None
-#extent=[0,matrix[0,-1]*0.001,0,matrix[-1,0]*0.001]
-#extent=[0,matrix[0,-1],0,matrix[-1,0]]
-extent=[-MAPX/2.0,MAPX/2.0,-MAPY/2.0,MAPY/2.0]
-#extent=[0,matrix[0,-1]*1,0,matrix[-1,0]*4]
-#extent=[0,2,0,2]
-#extent=[0,1,0,1]
-print extent
-#sys.exit()
-
-print "fixed"
-#matrix[0]=matrix[0]*1000 #0.001
-print matrix
-
-
-
-
+# Load input
 df = pd.read_csv(args.input)
+d=df[['{bodyFMU}.body.robot_x','{bodyFMU}.body.robot_y']]
+
+print "Simulation min: %s, max: %s" % (min(d['{bodyFMU}.body.robot_y']),max(d['{bodyFMU}.body.robot_y']))
+
+# Scaling ration of input
+xc=matrix.shape[1]/2
+yc=matrix.shape[0]/2
+scale=1000
 
 
-print np.matrix(df)
-
+# Figure
 fig = plt.figure()
+
+# Sub fig 1
 ax = fig.add_subplot(1,4,1)
 ax.set_aspect('equal')
 plt.title('Robot Raw')
-d=df[['{bodyFMU}.body.robot_x','{bodyFMU}.body.robot_y']]
 
-s=1 #1000
-ox=0 #300
-oy=0 #400
-print "Simulation min: %s, max: %s" % (min(d['{bodyFMU}.body.robot_y']),max(d['{bodyFMU}.body.robot_y']))
 plt.scatter(d['{bodyFMU}.body.robot_x'],d['{bodyFMU}.body.robot_y'])
 
+# Sub fig 2
 ax = fig.add_subplot(1,4,2)
-plt.scatter(500+(d['{bodyFMU}.body.robot_x']*1000),500+(d['{bodyFMU}.body.robot_y']*1000))
 ax.set_ylim([0,1000])
 ax.set_xlim([0,1000])
 plt.title('Corrected')
 ax.set_aspect('equal')
 
+plt.scatter(xc+(d['{bodyFMU}.body.robot_x']*scale),yc+(d['{bodyFMU}.body.robot_y']*scale))
+
+# Sub fig 3
 ax = fig.add_subplot(1,4,3)
 plt.title('Map')
 ax.set_aspect('equal')
 ax.autoscale_view(True,True,True)
+
 plt.imshow(matrix, interpolation='nearest', cmap=plt.cm.ocean, origin='lower')
+
+# Sub fig 4
 ax = fig.add_subplot(1,4,4)
 plt.title('Corrected+Map')
+ax.set_aspect('equal')
+ax.autoscale_view(True,True,True)
 
 plt.imshow(matrix, interpolation='nearest', cmap=plt.cm.ocean, origin='lower')
 
-plt.scatter(500+(1000*d['{bodyFMU}.body.robot_x']),500+(1000*d['{bodyFMU}.body.robot_y']))
-ax.set_aspect('equal')
-ax.autoscale_view(True,True,True)
+plt.scatter(xc+(scale*d['{bodyFMU}.body.robot_x']),yc+(scale*d['{bodyFMU}.body.robot_y']))
+
+# Figure 2
 
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)
@@ -102,7 +80,7 @@ plt.imshow(matrix, interpolation='nearest', cmap=plt.cm.ocean, origin='lower')
 xc=matrix.shape[1]/2
 yc=matrix.shape[0]/2
 
-plt.scatter(xc+(1000*d['{bodyFMU}.body.robot_x']),yc+(1000*d['{bodyFMU}.body.robot_y']))
+plt.scatter(xc+(scale*d['{bodyFMU}.body.robot_x']),yc+(scale*d['{bodyFMU}.body.robot_y']))
 ax.set_aspect('equal')
 ax.autoscale_view(True,True,True)
 plt.show()
