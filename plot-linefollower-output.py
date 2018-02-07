@@ -16,7 +16,6 @@ parser.add_argument('--width',help='Width of the map in [m]')
 parser.add_argument('--height',help='Height of the map in [m]')
 
 args = parser.parse_args()
-print args.input
 if (args.map is None and args.png is None) or args.input is None:
   print ("Both map and input must be set")
   sys.exit(-1)
