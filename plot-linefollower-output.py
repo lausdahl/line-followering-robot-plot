@@ -6,7 +6,7 @@ import argparse
 
 parser = argparse.ArgumentParser(prog='PROG', usage='%(prog)s [options]')
 
-parser.add_argument('--map', help='the map')
+parser.add_argument('--map', help='the map as txt')
 parser.add_argument('--input', help='the output file from a simulation in CSV')
 
 
