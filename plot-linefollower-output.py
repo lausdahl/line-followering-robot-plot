@@ -50,7 +50,7 @@ inputYOffset=0
 
 if not args.offset is None:
   if args.offset=='c':
-    print "c"
+    print "Offset is begin set to map 'center'"
     inputXOffset,inputYOffset=width/2,height/2
   else:
     offset = args.offset.split(',')
