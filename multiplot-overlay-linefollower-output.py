@@ -5,6 +5,7 @@ import pandas as pd
 import sys
 import argparse
 from matplotlib import colors
+import os
 
 parser = argparse.ArgumentParser(prog='PROG', usage='%(prog)s [options]')
 
@@ -21,7 +22,6 @@ if args.map is None or args.inputs is None or len(args.inputs) > 3:
 
 print args.map
 print args.inputs
-
 inputColors=['red','orange','blue']
 zipped = zip(args.inputs,inputColors)
 print zipped
@@ -46,8 +46,7 @@ scale=1000
 mapColorMap = colors.ListedColormap(['gray', 'white'])
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)
-plt.imshow(matrix, interpolation='nearest', cmap=mapColorMap, origin='lower')
-
+plt.imshow(matrix, interpolation='nearest', cmap=mapColorMap, origin='lower', label='map')
 for csv,(col,style) in zipped2:
     print csv
     print col
@@ -59,8 +58,8 @@ for csv,(col,style) in zipped2:
 
     print "Simulation min: %s, max: %s" % (min(d['{bodyFMU}.body.robot_y']),max(d['{bodyFMU}.body.robot_y']))
 
-
-    plt.plot(xc+(scale*d['{bodyFMU}.body.robot_x']),yc+(scale*d['{bodyFMU}.body.robot_y']), style, markevery=50, linewidth=2, color=col )
+    legend = os.path.splitext(os.path.basename(csv))[0]
+    plt.plot(xc+(scale*d['{bodyFMU}.body.robot_x']),yc+(scale*d['{bodyFMU}.body.robot_y']), style, markevery=50, linewidth=2, color=col, label=legend)
     ax.set_aspect('equal')
     ax.autoscale_view(True,True,True)
 # for csv,col in zipped:
@@ -74,6 +73,6 @@ for csv,(col,style) in zipped2:
 #     plt.plot(xc+(scale*d['{bodyFMU}.body.robot_x']),yc+(scale*d['{bodyFMU}.body.robot_y']), '--',linewidth=2,color=col )
 #     ax.set_aspect('equal')
 #     ax.autoscale_view(True,True,True)
-
+plt.legend()
 plt.show()
 
