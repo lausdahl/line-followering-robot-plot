@@ -26,7 +26,7 @@ inputColors=['red','orange','blue']
 zipped = zip(args.inputs,inputColors)
 print zipped
 
-inputColorsAndStyles=[('red','-'),('blue','-.'),('orange','--')]
+inputColorsAndStyles=[('red','-'),('blue','--'),('orange','.-')]
 zipped2 = zip(args.inputs,inputColorsAndStyles)
 print zipped2
 programPause = raw_input("Press the <ENTER> key to continue...")
@@ -55,13 +55,13 @@ for csv,(col,style) in zipped2:
     # Load input
     df = pd.read_csv(csv)
     d=df[['{bodyFMU}.body.robot_x','{bodyFMU}.body.robot_y']]
+    # Removing first 0.0 value
+    d = d.iloc[1:]
 
     print "Simulation min: %s, max: %s" % (min(d['{bodyFMU}.body.robot_y']),max(d['{bodyFMU}.body.robot_y']))
 
     legend = os.path.splitext(os.path.basename(csv))[0]
     plt.plot(xc+(scale*d['{bodyFMU}.body.robot_x']),yc+(scale*d['{bodyFMU}.body.robot_y']), style, markevery=50, linewidth=2, color=col, label=legend)
-    ax.set_aspect('equal')
-    ax.autoscale_view(True,True,True)
 # for csv,col in zipped:
 #     # Load input
 #     df = pd.read_csv(csv)
@@ -73,6 +73,10 @@ for csv,(col,style) in zipped2:
 #     plt.plot(xc+(scale*d['{bodyFMU}.body.robot_x']),yc+(scale*d['{bodyFMU}.body.robot_y']), '--',linewidth=2,color=col )
 #     ax.set_aspect('equal')
 #     ax.autoscale_view(True,True,True)
-plt.legend()
+ax.set_aspect('equal')
+ax.autoscale_view(True,True,True)
+ax.set_xlabel('Position x [mm]')
+ax.set_ylabel('Position y [mm]')
+plt.legend(loc='lower center')
 plt.show()
 
