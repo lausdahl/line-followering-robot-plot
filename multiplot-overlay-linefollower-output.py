@@ -25,7 +25,7 @@ print args.inputs
 inputColors=['red','orange','blue']
 zipped = zip(args.inputs,inputColors)
 print zipped
-
+# If other line styles are used, then add markerevery to plt.plots if there are many coordinates
 inputColorsAndStyles=[('red','-'),('blue','--'),('orange','.-')]
 zipped2 = zip(args.inputs,inputColorsAndStyles)
 print zipped2
@@ -61,7 +61,7 @@ for csv,(col,style) in zipped2:
     print "Simulation min: %s, max: %s" % (min(d['{bodyFMU}.body.robot_y']),max(d['{bodyFMU}.body.robot_y']))
 
     legend = os.path.splitext(os.path.basename(csv))[0]
-    plt.plot(xc+(scale*d['{bodyFMU}.body.robot_x']),yc+(scale*d['{bodyFMU}.body.robot_y']), style, markevery=50, linewidth=2, color=col, label=legend)
+    plt.plot(xc+(scale*d['{bodyFMU}.body.robot_x']),yc+(scale*d['{bodyFMU}.body.robot_y']), style,  linewidth=2, color=col, label=legend)
 # for csv,col in zipped:
 #     # Load input
 #     df = pd.read_csv(csv)
