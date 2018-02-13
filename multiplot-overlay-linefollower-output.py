@@ -11,7 +11,7 @@ parser = argparse.ArgumentParser(prog='PROG', usage='%(prog)s [options]')
 
 parser.add_argument('--map', help='the map as txt')
 parser.add_argument('--inputs', nargs='+', help='the output files from simulations in CSV in "file" "file"...')
-
+parser.add_argument('--fig-name', help='Path to save figure')
 
 args = parser.parse_args()
 
@@ -29,7 +29,7 @@ print zipped
 inputColorsAndStyles=[('red','-'),('blue','--'),('orange','.-')]
 zipped2 = zip(args.inputs,inputColorsAndStyles)
 print zipped2
-programPause = raw_input("Press the <ENTER> key to continue...")
+#programPause = raw_input("Press the <ENTER> key to continue...")
 
 # Load Map
 a = np.loadtxt(args.map)
@@ -40,7 +40,6 @@ print "Map matrix size: %s" % str(matrix.shape)
 xc=matrix.shape[1]/2
 yc=matrix.shape[0]/2
 scale=1000
-
 # Figure 2
 # make a color map of fixed colors
 mapColorMap = colors.ListedColormap(['gray', 'white'])
@@ -78,5 +77,7 @@ ax.autoscale_view(True,True,True)
 ax.set_xlabel('Position x [mm]')
 ax.set_ylabel('Position y [mm]')
 plt.legend(loc='lower center')
+if args.fig_name is not None:
+    plt.savefig(args.fig_name, bbox_inches='tight')
 plt.show()
 
